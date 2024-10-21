@@ -11,6 +11,7 @@ import java.util.Map;
 
 /**
  * UserDto
+ * Data Transfer Object for the User
  *
  * @author Jannes Bierma, Dalila Rustemovic
  * @version 1.0 - 20.10.2024

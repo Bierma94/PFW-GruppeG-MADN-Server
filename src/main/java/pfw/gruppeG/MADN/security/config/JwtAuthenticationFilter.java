@@ -23,8 +23,10 @@ import java.io.IOException;
 
 /**
  * JwtAuthenticationFilter
+ * Filters the request and checks the JWT token
  *
- *
+ * @author Jannes Bierma, Dalila Rustemovic
+ * @version 1.0 - 21.10.2024
  */
 @Component
 @RequiredArgsConstructor
@@ -42,8 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param request the request
      * @param response the response
      * @param filterChain the filter chain
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException thrown if a servlet exception occurs
+     * @throws IOException thrown if an I/O exception occurs
      */
     @Override
     protected void doFilterInternal(

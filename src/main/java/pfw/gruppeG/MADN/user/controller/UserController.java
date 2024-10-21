@@ -2,7 +2,6 @@ package pfw.gruppeG.MADN.user.controller;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.Valid;
@@ -30,7 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * UserController
- * Copyright (c) Jannes Bierma -All Rights Reserved.
+ * Rest Controller for the User
  *
  * @author Jannes Bierma, Dalila Rustemovic
  * @version 1.0 - 20.10.2024
@@ -41,14 +40,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Slf4j
 public class UserController {
 
-
+    /** The user service */
     private final UserServiceAPI userService;
 
+    /**
+     * Register a new user
+     * @param registerUserDto the register data transfer object
+     * @return the response entity
+     */
   @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(
             @RequestBody @Valid RegisterDto registerUserDto,
             BindingResult bindingResult) {
-      UserDto userDto = null;
+      UserDto userDto;
       if(bindingResult.hasErrors()) {
           return ResponseEntity
                   .status(HttpStatus.BAD_REQUEST)
@@ -77,6 +81,11 @@ public class UserController {
                   .body(UserDto.builder().msg(e.getMessage()).build());
       }
   }
+
+    /**
+     * Get the user information from security context
+     * @return the user information
+     */
     @GetMapping
     public ResponseEntity<UserDto> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -93,6 +102,14 @@ public class UserController {
 
 }
 
+/**
+ * RegisterDto
+ * Data transfer object for the register
+ * Contains the username, password and email
+ * Validation: username must be between 4 and 20 characters
+ *            password must be between 8 and 30 characters
+ *            email must be valid
+ */
 record RegisterDto (
         @NotNull @Length(min = 4, max = 20,
                 message = "Username must be between 4 and 20 characters")

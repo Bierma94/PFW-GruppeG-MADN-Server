@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pfw.gruppeG.MADN.security.JsonWebToken;
+
 import pfw.gruppeG.MADN.security.TokenDto;
 import pfw.gruppeG.MADN.security.service.AuthenticationService;
-import pfw.gruppeG.MADN.user.UserServiceAPI;
+
 
 /**
  * LoginController
+ * REST-Controller for the login
  *
  * @author Jannes Bierma, Dalila Rustemovic
  * @version 1.0 - 21.10.2024
@@ -22,8 +23,14 @@ import pfw.gruppeG.MADN.user.UserServiceAPI;
 @RequiredArgsConstructor
 public class LoginController {
 
+    /** The authentication service */
     private final AuthenticationService authenticationService;
 
+    /**
+     * User login with username and password
+     * @param loginDto the login data transfer object (username, password)
+     * @return the response entity with the token
+     */
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
@@ -39,4 +46,9 @@ public class LoginController {
 
 }
 
+/**
+ * LoginDto data transfer object for the login
+ * @param username username
+ * @param password password
+ */
 record LoginDto(String username, String password) { }

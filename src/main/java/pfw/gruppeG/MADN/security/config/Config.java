@@ -8,20 +8,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import pfw.gruppeG.MADN.user.UserServiceAPI;
-import pfw.gruppeG.MADN.user.exception.UserException;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * Config
+ * Creates a BCryptPasswordEncoder Bean and an AuthenticationProvider Bean
  *
  * @author Jannes Bierma, Dalila Rustemovic
  * @version 1.0 - 21.10.2024
@@ -31,11 +24,20 @@ import java.util.Map;
 @Slf4j
 public class Config {
 
+    /**
+     * BCryptPasswordEncoder Bean
+     * @return BCryptPasswordEncoder Bean
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * AuthenticationProvider Bean
+     * @param userDetailsService UserDetailsService
+     * @return AuthenticationProvider Bean
+     */
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService
     ) {
@@ -47,6 +49,12 @@ public class Config {
         return authProvider;
     }
 
+    /**
+     * AuthenticationManager Bean
+     * @param config AuthenticationConfiguration
+     * @return AuthenticationManager Bean
+     * @throws Exception if the AuthenticationManager cannot be created
+     */
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

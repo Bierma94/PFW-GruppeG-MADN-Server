@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
-import pfw.gruppeG.MADN.user.dto.UserDto;
 
 /**
  * TokenDto
+ * Data Transfer Object for the Token
  *
  * @author Jannes Bierma, Dalila Rustemovic
  * @version 1.0 - 21.10.2024

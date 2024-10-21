@@ -10,15 +10,20 @@ import java.util.Map;
 
 /**
  * UserWrapper
- * Copyright (c) Jannes Bierma -All Rights Reserved.
+ * Wraps a User object into a Map<String, String>
  *
- * @author Jannes Bierma (jannes.bierma@stud.hs-emden-leer.de)
- * @version 1.0 - 17.10.2024
+ * @author Jannes Bierma, Dalila Rustemovic
+ * @version 1.0 - 20.10.2024
  */
 @Component
 @NoArgsConstructor
 public class UserWrapper {
 
+    /**
+     * Maps a User object to a Map<String, String>
+     * @param user the user to be mapped
+     * @return Map<String, String> the mapped user
+     */
     public  Map<String, String> map(User user) {
         Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(user.getId()));

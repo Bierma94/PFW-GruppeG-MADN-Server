@@ -33,7 +33,7 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Extracts the username from the token
-     * @param token
+     * @param token json web token
      * @return the username
      */
     @Override
@@ -43,10 +43,10 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Extracts the claim from the token
-     * @param token
-     * @param claimsResolver
-     * @return the claim
-     * @param <T>
+     * @param token json web token
+     * @param claimsResolver function to resolve the claims
+     * @return the claim as an object
+     * @param <T> the type of the object
      */
     @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -72,7 +72,7 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Extracts the expiration date from the token
-     * @param token
+     * @param token json web token
      * @return the expiration
      */
     @Override
@@ -82,8 +82,8 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Validates the token
-     * @param token
-     * @param userDetails
+     * @param token json web token
+     * @param userDetails the user details
      * @return if the token is valid true, else false
      */
     @Override
@@ -94,7 +94,7 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Checks if the token is expired
-     * @param token
+     * @param token json web token
      * @return if the token is expired true, else false
      */
     @Override
@@ -104,7 +104,7 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Extracts all claims from the token
-     * @param token
+     * @param token json web token
      * @return the claims
      */
     private Claims extractAllClaims(String token) {
@@ -118,7 +118,7 @@ public class JsonWebTokenService implements JsonWebToken {
 
     /**
      * Extracts the expiration date from the token
-     * @param token
+     * @param token json web token
      * @return the expiration date
      */
     private Date extractExpiration(String token) {
