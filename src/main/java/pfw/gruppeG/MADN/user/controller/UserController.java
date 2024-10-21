@@ -1,17 +1,28 @@
 package pfw.gruppeG.MADN.user.controller;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.Link;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import pfw.gruppeG.MADN.user.UserServiceAPI;
 import pfw.gruppeG.MADN.user.dto.UserDto;
 
-import pfw.gruppeG.MADN.user.model.User;
-import pfw.gruppeG.MADN.user.repository.UserRepository;
+import pfw.gruppeG.MADN.user.exception.UserException;
+import pfw.gruppeG.MADN.user.model.UserRole;
 
-import java.util.Optional;
+
+import java.util.Map;
+import java.util.Objects;
+
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -25,38 +36,71 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * @version 1.0 - 20.10.2024
  */
 @RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
-    private final UserRepository userRepository;
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        Link link = linkTo(methodOn(UserController.class).getUser(id)).withSelfRel();
+    private final UserServiceAPI userService;
 
-        if (user.isPresent()) {
-            UserDto userDto = new UserDto(user.get());
-            userDto.setUser(user.get());
-            userDto.add(link);
-            userDto.add(linkTo(methodOn(UserController.class).getUser(user.get().getUsername())).withRel("user"));
-            userDto.add(linkTo(methodOn(UserController.class)).withSelfRel());
+  @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(
+            @RequestBody @Valid RegisterDto registerUserDto,
+            BindingResult bindingResult) {
+      UserDto userDto = null;
+      if(bindingResult.hasErrors()) {
+          return ResponseEntity
+                  .status(HttpStatus.BAD_REQUEST)
+                  .body(UserDto.builder()
+                          .msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage()).build());
+      }
+      try {
+          Map<String,String> user = userService.create(
+                  registerUserDto.username(),
+                  registerUserDto.password(),
+                  registerUserDto.email(),
+                  UserRole.USER.toString());
+          user.remove("password");
+          userDto = UserDto.builder()
+                  .msg("User successfully registered")
+                  .user(user)
+                  .build();
+          userDto.add(linkTo(methodOn(UserController.class).getUser()).withRel("user"));
+          return ResponseEntity
+                  .status(HttpStatus.CREATED)
+                  .body(userDto);
+      } catch (UserException e) {
+          log.debug(e.getMessage());
+          return ResponseEntity
+                  .status(HttpStatus.BAD_REQUEST)
+                  .body(UserDto.builder().msg(e.getMessage()).build());
+      }
+  }
+    @GetMapping
+    public ResponseEntity<UserDto> getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            Map<String, String> user = userService.getUser(authentication.getName());
+            UserDto userDto = UserDto.builder()
+                    .user(user)
+                    .build();
             return ResponseEntity.ok(userDto);
+        } catch (UserException e) {
+            return ResponseEntity.badRequest().body(UserDto.builder().msg(e.getMessage()).build());
         }
-        return ResponseEntity.badRequest().body(new UserDto(null));
-    }
-
-    @GetMapping("/user/name/{username}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        Link link = linkTo(methodOn(UserController.class).getUser(username)).withSelfRel();
-        if (user.isPresent()) {
-            UserDto userDto = new UserDto(user.get());
-            userDto.setUser(user.get());
-            userDto.add(link);
-            return ResponseEntity.ok(userDto);
-        }
-        return ResponseEntity.badRequest().body(new UserDto(null));
     }
 
 }
+
+record RegisterDto (
+        @NotNull @Length(min = 4, max = 20,
+                message = "Username must be between 4 and 20 characters")
+        String username,
+        @NotNull @Length(min = 8, max = 30,
+                message = "Password must be between 8 and 30 characters")
+        String password,
+        @Email(message = "Email should be valid")
+        String email
+){}
+

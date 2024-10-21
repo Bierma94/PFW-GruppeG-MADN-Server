@@ -13,15 +13,15 @@ import java.util.Map;
  */
 public interface UserServiceAPI {
 
-    Boolean create(String username, String password, String email, String role)
+    Map<String,String> create(String username, String password, String email, String role)
             throws UserException;
 
     Map<String,String> getUser(Long id) throws UserException;
 
     Map<String,String> getUser(String username) throws UserException;
 
-    Boolean update(Long id, String username, String password, String email, String role)
+    void update(Long id, String username, String password, String email, String role)
             throws UserException;
 
-    Boolean delete(Long id) throws UserException;
+    void delete(Long id) throws UserException;
 }

@@ -1,28 +1,22 @@
-package pfw.gruppeG.MADN.user.dto;
-
+package pfw.gruppeG.MADN.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
-
-import java.util.Map;
+import pfw.gruppeG.MADN.user.dto.UserDto;
 
 /**
- * UserDto
+ * TokenDto
  *
  * @author Jannes Bierma, Dalila Rustemovic
- * @version 1.0 - 20.10.2024
+ * @version 1.0 - 21.10.2024
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
-public class UserDto extends RepresentationModel<UserDto> {
-
-    private String msg;
-    private Map<String, String> user;
-
-
+public class TokenDto extends RepresentationModel<TokenDto> {
+    private String token;
 }

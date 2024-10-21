@@ -2,6 +2,8 @@ package pfw.gruppeG.MADN.user.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pfw.gruppeG.MADN.user.UserServiceAPI;
 import pfw.gruppeG.MADN.user.exception.UserException;
@@ -25,14 +27,19 @@ public class UserService implements UserServiceAPI {
     private final UserRepository userRepository;
     private final UserWrapper userWrapper;
 
+    private final PasswordEncoder passwordEncoder;
+
 
 
     @Override
-    public Boolean create(String username, String password, String email, String role)
+    public Map<String, String> create(String username, String password, String email, String role)
             throws UserException {
        UserRole userRole = UserRole.valueOf(role);
         if(existsByUsername(username)) {
             throw new UserException("User already registered");
+        }
+        if(existsByEmail(email)) {
+            throw new UserException("Email already registered");
         }
         if (userRole == null) {
             throw new UserException("Role not found");
@@ -40,10 +47,11 @@ public class UserService implements UserServiceAPI {
          User user = User.builder()
                  .username(username)
                  .role(userRole)
-                 .password(password)
+                 .password(passwordEncoder.encode(password))
                  .email(email)
                  .build();
-            return save(user);
+             save(user);
+             return userWrapper.map(user);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class UserService implements UserServiceAPI {
     }
 
     @Override
-    public Boolean update(Long id, String username, String password, String email, String role)
+    public void update(Long id, String username, String password, String email, String role)
             throws UserException {
         UserRole userRole = UserRole.valueOf(role);
         if(userRole == null) {
@@ -76,24 +84,26 @@ public class UserService implements UserServiceAPI {
         user.setPassword(password);
         user.setEmail(email);
         user.setRole(userRole);
-        return save(user);
+         save(user);
     }
 
     @Override
-    public Boolean delete(Long id) throws UserException {
+    public void delete(Long id) throws UserException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserException("User not found"));
         userRepository.delete(user);
-        return true;
     }
 
-    private Boolean save(User user) {
+    private void save(User user) {
         userRepository.save(user);
-        return true;
     }
 
      private Boolean existsByUsername(String username) {
          return userRepository.existsByUsername(username);
+     }
+
+     private Boolean existsByEmail(String email) {
+         return userRepository.existsByEmail(email);
      }
 
 }
