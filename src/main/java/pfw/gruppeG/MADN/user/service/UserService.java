@@ -31,6 +31,7 @@ public class UserService implements UserServiceAPI {
     /** The PasswordEncoder */
     private final PasswordEncoder passwordEncoder;
 
+
     /**
      * Creates a new user
      * @param username username of the user

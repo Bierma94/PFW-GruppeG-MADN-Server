@@ -31,6 +31,7 @@ public class SecurityConfig {
     private final static String[] AUTH_WHITELIST = {
             "/api/login/**",
             "/api/users/**",
+            "/actuator/**",
     };
 
     /** USER_WHITELIST permit all that has role USER */
