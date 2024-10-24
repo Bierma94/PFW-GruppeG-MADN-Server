@@ -31,7 +31,12 @@ public class SecurityConfig {
     private final static String[] AUTH_WHITELIST = {
             "/api/login/**",
             "/api/users/**",
-            "/actuator/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/webjars/**",
+
     };
 
     /** USER_WHITELIST permit all that has role USER */
@@ -41,6 +46,7 @@ public class SecurityConfig {
     /** ADMIN_WHITELIST permit all that has role ADMIN */
     private final static String[] ADMIN_WHITELIST = {
             "/admin/**",
+            "/actuator/**",
     };
 
     /** The Authentication Provider */

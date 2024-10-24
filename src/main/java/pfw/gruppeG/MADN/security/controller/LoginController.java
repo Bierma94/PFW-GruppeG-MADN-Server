@@ -1,5 +1,7 @@
 package pfw.gruppeG.MADN.security.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,9 @@ public class LoginController {
      * @param loginDto the login data transfer object (username, password)
      * @return the response entity with the token
      */
+    @Operation(summary = "Login a user")
+    @ApiResponse(responseCode = "200", description = "Get JWT token")
+    @ApiResponse(responseCode = "400", description = "Invalid Credentials")
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {

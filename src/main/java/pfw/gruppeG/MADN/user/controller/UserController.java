@@ -1,5 +1,7 @@
 package pfw.gruppeG.MADN.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import pfw.gruppeG.MADN.user.UserServiceAPI;
 import pfw.gruppeG.MADN.user.dto.UserDto;
 
@@ -48,6 +51,9 @@ public class UserController {
      * @param registerUserDto the register data transfer object
      * @return the response entity
      */
+    @Operation(summary = "Register a new user")
+    @ApiResponse(responseCode = "201", description = "User successfully registered")
+    @ApiResponse(responseCode = "400", description = "User already registered")
   @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(
             @RequestBody @Valid RegisterDto registerUserDto,
@@ -86,6 +92,9 @@ public class UserController {
      * Get the user information from security context
      * @return the user information
      */
+    @Operation(summary = "Get the user information")
+    @ApiResponse(responseCode = "200", description = "Return the user information")
+    @ApiResponse(responseCode = "400", description = "User not found")
     @GetMapping
     public ResponseEntity<UserDto> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
