@@ -100,6 +100,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             Map<String, String> user = userService.getUser(authentication.getName());
+            user.remove("password");
             UserDto userDto = UserDto.builder()
                     .user(user)
                     .build();
