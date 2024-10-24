@@ -14,7 +14,7 @@ Gruppe: G
 Clone the project
 
 ```bash
-  git clone https://github.com/Bierma94/PFW-GruppeG-MADN-Server.git
+  git clone https://gitlab.technik-emden.de/pfw/pfw-2024/pfw-2024-gruppe-g/madn-server.git
 ```
 ##### change directory to project
 
